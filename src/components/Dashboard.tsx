@@ -44,6 +44,30 @@ type Todolist = {
   todos: Todo[];
 };
 
+const generateLayouts = (lists: Todolist[]): { [key: string]: Layout[] } => {
+  return {
+    lg: lists.map((list, i) => {
+      const cols = 12; 
+      const w = 4;
+
+      const isSingle = lists.length === 1;
+      const x = isSingle ? Math.floor((cols - w) / 2) : (i % 3) * 4;
+      const y = Math.floor(i / 3) * 6;
+
+      return {
+        i: list.id,
+        x,
+        y,
+        w,
+        h: 8,
+        minW: 2,
+        minH: 6,
+      };
+    }),
+  };
+};
+
+
 const initialLists: Todolist[] = [
   {
     id: "1",
@@ -55,25 +79,35 @@ const initialLists: Todolist[] = [
 ];
 
 export default function Dashboard() {
-  const [lists, setLists] = useState<Todolist[]>(initialLists);
-  const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>({});
+  const [lists, setLists] = useState<Todolist[]>(() => {
+    try {
+      const stored = localStorage.getItem("dashboard_lists");
+      return stored ? JSON.parse(stored) : initialLists;
+    } catch {
+      return initialLists;
+    }
+  });
+
+  const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>(() => {
+    try {
+      const stored = localStorage.getItem("dashboard_layouts");
+      return stored ? JSON.parse(stored) : generateLayouts(initialLists);
+    } catch {
+      return generateLayouts(initialLists);
+    }
+  });
+
   const [newListName, setNewListName] = useState("");
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
-    const defaultLayout: Layout[] = lists.map((list, i) => ({
-      i: list.id,
-      x: (i % 3) * 4,
-      y: Math.floor(i / 3) * 6,
-      w: 4,
-      h: 8,
-      minW: 2,
-      minH: 6,
-    }));
-
-    setLayouts({ lg: defaultLayout });
+    localStorage.setItem("dashboard_lists", JSON.stringify(lists));
   }, [lists]);
+
+  useEffect(() => {
+    localStorage.setItem("dashboard_layouts", JSON.stringify(layouts));
+  }, [layouts]);
 
   const handleLayoutChange = (_: Layout[], allLayouts: { [key: string]: Layout[] }) => {
     setLayouts(allLayouts);
@@ -87,6 +121,9 @@ export default function Dashboard() {
 
   const deleteList = (id: string) => {
     setLists((prev) => prev.filter((list) => list.id !== id));
+    setLayouts((prev) => ({
+      lg: prev.lg.filter((layout) => layout.i !== id),
+    }));
   };
 
   const createNewList = () => {
@@ -98,7 +135,10 @@ export default function Dashboard() {
       name,
       todos: [],
     };
-    setLists([...lists, newList]);
+
+    const updatedLists = [...lists, newList];
+    setLists(updatedLists);
+    setLayouts(generateLayouts(updatedLists));
     setNewListName("");
     setOpen(false);
   };
@@ -175,7 +215,6 @@ export default function Dashboard() {
             <div className="drag-handle cursor-move mb-2">
               <GripVertical className="opacity-50" />
             </div>
-
             <X
               className="absolute top-2 right-2 w-5 h-5 text-muted-foreground hover:text-white cursor-pointer z-10"
               onClick={(e) => {
@@ -183,7 +222,6 @@ export default function Dashboard() {
                 deleteList(list.id);
               }}
             />
-
             <TodoCard todolist={list} onUpdate={updateList} />
           </div>
         ))}

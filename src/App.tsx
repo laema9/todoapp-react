@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider"
 import { FontProvider } from "@/components/font-provider" // ajuste le chemin si besoin
-import TodoCard from "./components/TodoCard"
+import Dashboard from "./components/Dashboard"
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <div className="flex p-5 justify-center">
           
           <div className="w-full">
-            <TodoCard />
+            <Dashboard />
           </div>
 
         </div>

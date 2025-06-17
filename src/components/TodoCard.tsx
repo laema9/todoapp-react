@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+
 
 type Todo = {
     id: string;
@@ -42,15 +44,22 @@ export default function TodoCard () {
                         <Checkbox
                             checked={todo.done}
                             onCheckedChange={() => {
-                                
                                 const updated = todolist.todos.map((t) => 
                                 t.id === todo.id ? {...t, done: !t.done} : t
                                 );
-
                                 setTodolist({...todolist, todos: updated})
                             }}
                         /> 
                         <p className={todo.done ? "line-through text-gray-400" : ""}>{todo.content}</p>
+                        
+                        <X className="text-gray-400 w-[15px] hover:text-white ml-2"
+                        onClick={() => {
+                            console.log("removed")
+                            const removed = todolist.todos.filter((t) => t.id !== todo.id);
+                            setTodolist({...todolist, todos: removed})
+
+                        }}
+                        />
                     </li>
                 )
             )}
@@ -75,19 +84,11 @@ export default function TodoCard () {
 
                   const updatedTodos = [...todolist.todos, newTodo];
                   setTodolist({ ...todolist, todos: updatedTodos });
-                  
                   setNewTodoContent("");
-
                 }}
-
-            
-            
             >Add</Button>
             </div> 
 
         </div>
     )
-   
-    
-
 }

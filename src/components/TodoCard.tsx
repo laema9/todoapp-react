@@ -166,7 +166,7 @@ export default function TodoCard({ todolist, onUpdate }: Props) {
                     </div>
                     <DrawerFooter>
                       <DrawerClose asChild>
-                        <Button variant="outline">Annuler</Button>
+                        <Button className="mb-10" variant="outline">Annuler</Button>
                       </DrawerClose>
                     </DrawerFooter>
                   </DrawerContent>

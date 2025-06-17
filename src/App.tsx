@@ -8,10 +8,10 @@ function App() {
       <FontProvider defaultFont="Outfit" storageKey="app-font">
         <>
         <header className="p-5">
-          <h1 className="text-xl font-medium">@laema9 todo app</h1>
+          <h1 className="flex justify-center text-xl font-medium">@laema9 todo app</h1>
         </header>
 
-        <div className="flex p-5 justify-center">
+        <div className="flex justify-center">
           
           <div className="w-full">
             <Dashboard />

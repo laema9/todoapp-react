@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider"
 import { FontProvider } from "@/components/font-provider" // ajuste le chemin si besoin
-import TodoList from "./components/TodoList"
 import TodoCard from "./components/TodoCard"
 
 function App() {

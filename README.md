@@ -1,4 +1,4 @@
-# @laema9 todo List App (v1)
+# @laema9 todo list app (v1)
 
 A minimalist and responsive todo list built with **React + TypeScript**.
 UI with **Shadcn/ui**, drag & drop layout via **react-grid-layout**, and full **PWA support**.
